@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import { decrease, increase } from './utils';
+import { decrease, increase } from './utils.ts';
 
 function App() {
   const [count, setCount] = useState(0);
