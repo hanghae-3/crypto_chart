@@ -18,6 +18,7 @@ function App() {
       <button onClick={() => setCount(count => increase(count))}>증가</button>
       <button onClick={() => setCount(count => decrease(count))}>감소</button>
       {/*{greet && <p data-testid="greet">{greet}</p>}*/}
+      허숙희
     </div>
   )
 }
