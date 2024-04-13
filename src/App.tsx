@@ -24,3 +24,6 @@ function App() {
 }
 
 export default App
+
+
+// make function to findNumber  from 1 to 100 that is multiple of 3 and 5
