@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import './App.css';
 // import Chart from './components/Chart';
 // import { useClientWidthHeight } from './hooks/useClientWidthHeight';
-import Page from './components/Page';
+import CryptoSelector from './components/CryptoSelector';
 
 function App() {
 	const mainRef = useRef<HTMLElement>(null);
@@ -11,7 +11,7 @@ function App() {
 	return (
 		<main className="w-[100vw] h-[100vh]" ref={mainRef}>
 			{/* <Chart width={width} height={height} /> */}
-			<Page />
+			<CryptoSelector />
 		</main>
 	);
 }
