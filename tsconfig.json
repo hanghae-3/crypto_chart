@@ -28,7 +28,9 @@
     ]
   },
   "include": [
-    "src"
+    "src",
+    "**/*.tsx",
+    "**/*.ts",
   ],
   "references": [
     {
