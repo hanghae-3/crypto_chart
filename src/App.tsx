@@ -5,9 +5,10 @@ import './App.css';
 import CryptoSelector from './components/CryptoSelector';
 import useFetchMarketCode from './hooks/crypto/useFetchMarketCode';
 import useTotalMarketCodes from './stores/useTotalMarketCodes';
+import CryptoDetail from './components/CryptoDetail';
 
 function App() {
-	const mainRef = useRef<HTMLElement>(null);
+	// const mainRef = useRef<HTMLElement>(null);
 	// const { width, height } = useClientWidthHeight(mainRef);
 	const { isLoading, marketCodes } = useFetchMarketCode();
 	const { setTotalMarketCodes } = useTotalMarketCodes();
@@ -18,9 +19,10 @@ function App() {
 	}, [marketCodes]);
 
 	return (
-		<main className="w-[100vw] h-[100vh]" ref={mainRef}>
+		<main className="w-[100vw] h-[100vh] flex">
 			{/* <Chart width={width} height={height} /> */}
 			<CryptoSelector />
+			<CryptoDetail />
 		</main>
 	);
 }
