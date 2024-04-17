@@ -24,8 +24,8 @@ function useGetTicker(
 	const throttled = throttle(() => {
 		try {
 			const lastBuffers = getLastBuffers(buffer.current, targetMarketCodes.length);
-
 			const sortedBuffers = sortBuffers(lastBuffers, targetMarketCodes);
+			// console.log(sortedBuffers);
 
 			sortedBuffers && setLoadingBuffer(sortedBuffers);
 			buffer.current = [];
@@ -76,6 +76,8 @@ function useGetTicker(
 
 				const socketMessageHandler = (evt: MessageEvent<ArrayBuffer>) => {
 					const data = encodeSocketData<ITicker>(evt.data);
+					// console.log(evt.data, data?.trade_time);
+
 					if (debug) console.log('data:', data);
 					data && buffer.current.push(data);
 					throttled();
@@ -109,6 +111,7 @@ function useGetTicker(
 	useEffect(() => {
 		try {
 			if (loadingBuffer.length > 0) {
+				// console.log(loadingBuffer.at(-1)?.trade_timestamp);
 				if (!socketData) {
 					setSocketData(loadingBuffer);
 				} else {
@@ -122,6 +125,8 @@ function useGetTicker(
 			console.error(error);
 		}
 	}, [loadingBuffer]);
+
+	// console.log(socketData);
 
 	return { socket: socket.current, isConnected, socketData };
 }

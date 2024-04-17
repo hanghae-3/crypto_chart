@@ -25,7 +25,7 @@ export default function CryptoSelector() {
 	};
 
 	return (
-		<aside className="h-[80vh] m-[5px] bg-white overflow-y-scroll text-[12px] shadow-[0_7px_29px_0_rgba(100, 100, 111, 0.2)] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]">
+		<aside className="max-w-[400px] w-[350px] h-[80vh] m-[5px] bg-white overflow-y-scroll text-[12px] shadow-[0_7px_29px_0_rgba(100, 100, 111, 0.2)] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]">
 			<nav className="sticky grid bg-white grid-cols-cryptoAside top-1 opacity-80 h-[35px] border-b-[0.5px] border-solid border-[lightgray] font-bold">
 				<div className="flex items-center justify-center">코인</div>
 				<div className="flex items-center justify-center">현재가</div>

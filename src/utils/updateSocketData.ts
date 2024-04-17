@@ -14,15 +14,20 @@ const updateSocketData = (originalData: ITicker[], newData: ITicker[]): ITicker[
 			(acc, curr) => ({ ...acc, [curr.code]: curr }), // curr을 통해 copyOriginal 원소의 reference를 넘김
 			{} as { [key: string]: ITicker },
 		);
+		// console.log(copyOriginalIndexed, copyNew, copyOriginal);
+		// console.log(newData);
 
 		copyNew.forEach((ele) => {
 			const target = copyOriginalIndexed[ele.code];
+			// console.log(target, ele);
+
 			if (target) {
 				Object.assign(target, ele); // copyOriginal 원소의 reference인 target을 Object.assign하여 덮어씌움으로 copyOriginal까지 변경
 			} else {
 				copyOriginal.push(ele);
 			}
 		});
+		// console.log(copyOriginal, newData);
 
 		return copyOriginal;
 	} catch (error) {
