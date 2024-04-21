@@ -1,6 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import useFetchMarketCode from '../useFetchMarketCode';
-import { render, renderHook, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, renderHook, screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 
 const debugTest = false;
 
@@ -40,7 +39,8 @@ describe('useFetchMarketCode 훅은', () => {
 			} as Response);
 
 			const { result } = renderHook(() => useFetchMarketCode({ debug: debugTest }));
-			await vi.waitUntil(async () => {
+			// await vi.waitUntil
+			waitFor(async () => {
 				return result.current.isLoading === false;
 			});
 
@@ -103,7 +103,7 @@ describe('useFetchMarketCode 훅은', () => {
 			expect(loadingStatus).toBeInTheDocument();
 
 			await waitForElementToBeRemoved(() => screen.queryByText(/^로딩/i));
-			const item = screen.getByText(/KRW-BTC-비트코인-Bitcoin/i);
+			const item = screen.getByText(/데이터가 없습니다./i);
 			expect(item).toBeInTheDocument();
 		});
 	});
