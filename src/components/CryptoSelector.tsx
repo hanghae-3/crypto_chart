@@ -49,14 +49,14 @@ export default function CryptoSelector() {
 								</div>
 								<div
 									className={`flex items-center justify-end font-bold ${setFontColorByFluctuationRate(data.change)}`}>
-									{data.trade_price.toLocaleString('ko-KR')}
+									{data.trade_price?.toLocaleString('ko-KR')}
 								</div>
 								<div className={`flex flex-col items-end justify-center ${setFontColorByFluctuationRate(data.change)}`}>
 									<div>
 										{data.signed_change_rate > 0 ? '+' : null}
 										{(data.signed_change_rate * 100).toFixed(2)}%
 									</div>
-									<div>{data.signed_change_price.toLocaleString('ko-KR')}</div>
+									<div>{data.signed_change_price?.toLocaleString('ko-KR')}</div>
 								</div>
 								<div className="flex items-center gap-[2px] justify-end text-[11px]">
 									<div>{Math.ceil(convertMillonWon(data.acc_trade_price_24h)).toLocaleString('ko-KR')}</div>

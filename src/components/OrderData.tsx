@@ -29,7 +29,6 @@ export default function OrderData() {
 				orderBookContainerRef.current.scrollTop = orderBookContainerRef.current?.scrollHeight / 3;
 			}
 		}
-		console.log(socketData, maxAskSize);
 	}, [socketData]);
 
 	return (

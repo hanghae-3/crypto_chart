@@ -17,88 +17,62 @@ type ProcessedData = {
 
 type UpdatedData = ProcessedData;
 
-export default function RealTimeChart() {
+export default function RealTimeChart2() {
 	const { selectedCrypto } = useTotalMarketCodes();
 	const { selectedCryptoInfo } = useCryptoInfo();
-	const [fetchedData, setFetchedData] = useState<(ITicker & { candle_date_time_kst: string })[]>();
+
 	const [processedData, setProcessedData] = useState<ProcessedData[]>();
 	const [updatedCandle, setUpdatedCandle] = useState<UpdatedData[]>();
-	// const { socketData } = useGetPrice(selectedCrypto[0]);
-
-	const options = { method: 'GET', headers: { Accept: 'application/json' } };
+	const { socketData } = useGetPrice(selectedCrypto[0]);
 
 	useEffect(() => {
-		// TODO: 여기를 WebSocket으로 변경해야 함
-		async function fetchDayCandle(marketCode: string, date: string, count: number) {
-			try {
-				const response = await fetch(
-					`https://api.upbit.com/v1/candles/days?market=${marketCode}&to=${date}T09:00:00Z&count=${count}&convertingPriceUnit=KRW`,
-					options,
-				);
-				const result = await response.json();
-				setFetchedData(result);
-			} catch (error) {
-				console.error(error);
-			}
-		}
-		if (selectedCrypto) {
-			fetchDayCandle(selectedCrypto[0].market, getTodayDate(), 200);
-		}
-	}, [selectedCrypto]);
+		// console.log(socketData?.map((data) => data.timestamp));
+		// console.log(socketData && format(new Date(socketData[0].timestamp), 'yyyy-MM-dd'));
 
-	useEffect(() => {
-		console.log(fetchedData, fetchedData && fetchedData.map((data) => data.candle_date_time_kst));
+		// console.log(fetchedData);
 
-		if (fetchedData) {
-			const processed = [...fetchedData].reverse().map((data) => {
+		console.log(socketData);
+		if (socketData) {
+			const processed = [...socketData].map((data) => {
+				console.log(format(new Date(data.timestamp), 'yyyy-MM-dd hh:mm:ss'));
 				return {
-					time: data.candle_date_time_kst.split('T')[0],
+					// time: data.timestamp.toString(),
+					// time: format(new Date(data.timestamp), 'yyyy-MM-dd'),
+					// time: Date.parse(format(new Date(data.timestamp), 'yyyy-MM-dd hh:mm')) / 1000,
+					// time: data.timestamp.toString(),
+					time: data.timestamp,
 					open: data.opening_price,
 					high: data.high_price,
 					low: data.low_price,
 					close: data.trade_price,
 				};
 			});
+			console.log(processed);
+
 			setProcessedData(processed);
+			setUpdatedCandle(processed?.at(-1));
 		}
-		// console.log(socketData?.map((data) => data.timestamp));
-		// console.log(socketData && format(new Date(socketData[0].timestamp), 'yyyy-MM-dd'));
+		// }, [fetchedData]);
+	}, [socketData]);
 
-		// if (socketData) {
-		// 	const processed = [...socketData].reverse().map((data) => {
-		// 		console.log(format(new Date(data.timestamp), 'yyyy-MM-dd hh:mm:ss'));
-		// 		return {
-		// 			// time: data.timestamp.toString(),
-		// 			// time: format(new Date(data.timestamp), 'yyyy-MM-dd'),
-		// 			time: Date.parse(format(new Date(data.timestamp), 'yyyy-MM-dd hh:mm')) / 1000,
-		// 			open: data.opening_price,
-		// 			high: data.high_price,
-		// 			low: data.low_price,
-		// 			close: data.trade_price,
-		// 		};
-		// 	});
-		// 	setProcessedData(processed);
-		// }
-	}, [fetchedData]);
-	// }, [socketData]);
-
-	useEffect(() => {
-		if (selectedCryptoInfo[0]) {
-			setUpdatedCandle({
-				time: selectedCryptoInfo[0].trade_date
-					? {
-							day: selectedCryptoInfo[0].trade_date.slice(6, 8),
-							month: selectedCryptoInfo[0].trade_date.slice(4, 6),
-							year: selectedCryptoInfo[0].trade_date.slice(0, 4),
-						}
-					: null,
-				open: selectedCryptoInfo[0].opening_price,
-				high: selectedCryptoInfo[0].high_price,
-				low: selectedCryptoInfo[0].low_price,
-				close: selectedCryptoInfo[0].trade_price,
-			});
-		}
-	}, [selectedCryptoInfo]);
+	// useEffect(() => {
+	// 	if (selectedCryptoInfo[0]) {
+	// 		setUpdatedCandle({
+	// 			// time: selectedCryptoInfo[0].trade_date
+	// 			// 	? {
+	// 			// 			day: Number(selectedCryptoInfo[0].trade_date.slice(6, 8)),
+	// 			// 			month: Number(selectedCryptoInfo[0].trade_date.slice(4, 6)),
+	// 			// 			year: Number(selectedCryptoInfo[0].trade_date.slice(0, 4)),
+	// 			// 		}
+	// 			// 	: null,
+	// 			time: selectedCryptoInfo[0].timestamp,
+	// 			open: selectedCryptoInfo[0].opening_price,
+	// 			high: selectedCryptoInfo[0].high_price,
+	// 			low: selectedCryptoInfo[0].low_price,
+	// 			close: selectedCryptoInfo[0].trade_price,
+	// 		});
+	// 	}
+	// }, [selectedCryptoInfo]);
 
 	return <ChartContainer processedData={processedData} updatedCandle={updatedCandle} />;
 }
@@ -148,8 +122,12 @@ function ChartContainer({ processedData, updatedCandle }: Props) {
 					borderVisible: false,
 				},
 				overlayPriceScales: {},
+				localization: {
+					dateFormat: 'yyyy-MM-dd HH:mm:ss',
+				},
 			});
 			chart.current.timeScale().fitContent();
+			// chart.current.addCandlestickSeries();
 			newSeries.current = chart.current.addCandlestickSeries({
 				upColor: '#D24F45',
 				wickUpColor: '#D24F45',
@@ -190,6 +168,8 @@ function ChartContainer({ processedData, updatedCandle }: Props) {
 			// 	lastValueVisible: false,
 			// });
 
+			console.log(processedData, updatedCandle);
+
 			chart.current.subscribeCrosshairMove((param: any) => {
 				if (!chartContainerRef.current) return;
 				if (!toolTipRef.current) return;
@@ -212,21 +192,6 @@ function ChartContainer({ processedData, updatedCandle }: Props) {
 					<div class="mt-1 font-bold text-center">${(Math.round(100 * price) / 100).toLocaleString('ko-KR')}</div>
 					<div class="text-center">${dateStr}</div>`;
 
-					// console.log(data);
-
-					// const y = param.point.y;
-					// let left = param.point.x + toolTipMargin;
-					// if (left > chartContainerRef.current.clientWidth - toolTipWidth) {
-					// 	left = param.point.x - toolTipMargin - toolTipWidth;
-					// }
-
-					// let top = y + toolTipMargin;
-					// if (top > chartContainerRef.current.clientHeight - toolTipHeight) {
-					// 	top = y - toolTipHeight - toolTipMargin;
-					// }
-					// toolTipRef.current.style.left = left + 'px';
-					// toolTipRef.current.style.top = top + 'px';
-
 					let left = param.point.x;
 					const timeScaleWidth = chart.current.timeScale().width();
 					const priceScaleWidth = chart.current.priceScale('left').width();
@@ -243,6 +208,7 @@ function ChartContainer({ processedData, updatedCandle }: Props) {
 			// console.log(processedData);
 
 			newSeries.current.setData(processedData);
+			// newSeries.current.setData(updatedCandle);
 
 			return () => {
 				window.removeEventListener('resize', handleResize);
@@ -253,8 +219,6 @@ function ChartContainer({ processedData, updatedCandle }: Props) {
 
 	useEffect(() => {
 		if (updatedCandle && newSeries.current) {
-			console.log(updatedCandle);
-
 			newSeries.current?.update(updatedCandle);
 		}
 	}, [updatedCandle]);
