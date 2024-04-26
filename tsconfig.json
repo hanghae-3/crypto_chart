@@ -24,8 +24,10 @@
     // type 추가
     "types": [
       "vitest",
+      "vitest/globals",
       "@testing-library/jest-dom/vitest"
-    ]
+    ],
+    "noImplicitAny": false
   },
   "include": [
     "src",

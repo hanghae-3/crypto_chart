@@ -1,59 +1,53 @@
 import { useEffect, useRef, useState } from 'react';
-import { ITicker, ImarketCodes, TKOptionsInterface } from '../../types/crypto';
-import { throttle } from 'lodash';
-import sortBuffers from '../../utils/sortBuffers';
-import getLastBuffers from '../../utils/getLastBuffers';
-import isArrayOfMarketCodes from '../../utils/isArrayOfMarketCodes';
+import { IOrderbook, ImarketCodes, OBOptionsInterface } from '../../types/crypto';
 import encodeSocketData from '../../utils/encodeSocketData';
-import updateSocketData from '../../utils/updateSocketData';
+import { throttle } from 'lodash';
+import getLastBuffers from '../../utils/getLastBuffers';
+import isMarketCodes from '../../utils/isMarketCodes';
 
-function useGetTicker(
-	targetMarketCodes: ImarketCodes[],
+function useGetOrder(
+	targetMarketCodes: ImarketCodes,
 	onError?: (error: Error) => void,
-	options: TKOptionsInterface = {},
+	option: OBOptionsInterface = {},
 ) {
-	const { throttle_time = 400, debug = false } = options;
+	const { throttle_time = 400, debug = false } = option;
 	const SOCKET_URL = 'wss://api.upbit.com/websocket/v1';
+
 	const socket = useRef<WebSocket | null>(null);
-	const buffer = useRef<ITicker[]>([]);
+	const buffer = useRef<IOrderbook[]>([]);
 
 	const [isConnected, setIsConnected] = useState<boolean>(false);
-	const [loadingBuffer, setLoadingBuffer] = useState<ITicker[]>([]);
-	const [socketData, setSocketData] = useState<ITicker[] | null>(null);
+	const [socketData, setSocketData] = useState<IOrderbook>();
 
 	const throttled = throttle(() => {
 		try {
-			const lastBuffers = getLastBuffers(buffer.current, targetMarketCodes.length);
-			const sortedBuffers = sortBuffers(lastBuffers, targetMarketCodes);
-			// console.log(sortedBuffers);
-
-			sortedBuffers && setLoadingBuffer(sortedBuffers);
+			const lastBuffers = getLastBuffers(buffer.current, [targetMarketCodes].length);
+			lastBuffers && setSocketData(lastBuffers[0]);
 			buffer.current = [];
 		} catch (error) {
 			console.error(error);
-			return;
 		}
 	}, throttle_time);
 
 	// socket 세팅
 	useEffect(() => {
 		try {
-			if (targetMarketCodes.length > 0 && !isArrayOfMarketCodes(targetMarketCodes)) {
+			if (targetMarketCodes && !isMarketCodes(targetMarketCodes)) {
 				throw new Error('targetMarketCodes does not have the correct interface');
 			}
-			if (targetMarketCodes.length > 0 && !socket.current) {
+			if ([targetMarketCodes].length > 0 && !socket.current) {
 				socket.current = new WebSocket(SOCKET_URL);
 				socket.current.binaryType = 'arraybuffer';
 
 				const socketOpenHandler = () => {
 					setIsConnected(true);
-					if (debug) console.log('[completed connect] | socket Open Type: ', 'ticker');
+					if (debug) console.log('[completed connect] | socket Open Type: ', 'orderbook');
 					if (socket.current?.readyState == 1) {
 						const sendContent = [
 							{ ticket: 'test' },
 							{
-								type: 'ticker',
-								codes: targetMarketCodes.map((code) => code.market),
+								type: 'orderbook',
+								codes: [targetMarketCodes.market],
 							},
 						];
 						socket.current.send(JSON.stringify(sendContent));
@@ -63,22 +57,18 @@ function useGetTicker(
 
 				const socketCloseHandler = () => {
 					setIsConnected(false);
-					setLoadingBuffer([]);
-					setSocketData(null);
+					setSocketData(undefined);
 					buffer.current = [];
 					if (debug) console.log('connection closed');
 				};
 
 				const socketErrorHandler = (event: Event) => {
 					const error = (event as ErrorEvent).error as Error;
-					console.error('[Error]', error);
+					if (debug) console.error('[Error]', error);
 				};
 
 				const socketMessageHandler = (evt: MessageEvent<ArrayBuffer>) => {
-					const data = encodeSocketData<ITicker>(evt.data);
-					// console.log(evt.data, data?.trade_time);
-
-					if (debug) console.log('data:', data);
+					const data = encodeSocketData<IOrderbook>(evt.data);
 					data && buffer.current.push(data);
 					throttled();
 				};
@@ -108,27 +98,7 @@ function useGetTicker(
 		}
 	}, [targetMarketCodes]);
 
-	useEffect(() => {
-		try {
-			if (loadingBuffer.length > 0) {
-				// console.log(loadingBuffer.at(-1)?.trade_timestamp);
-				if (!socketData) {
-					setSocketData(loadingBuffer);
-				} else {
-					setSocketData((prev) => {
-						return prev && updateSocketData(prev, loadingBuffer);
-					});
-					setLoadingBuffer([]);
-				}
-			}
-		} catch (error) {
-			console.error(error);
-		}
-	}, [loadingBuffer]);
-
-	// console.log(socketData);
-
 	return { socket: socket.current, isConnected, socketData };
 }
 
-export default useGetTicker;
+export default useGetOrder;

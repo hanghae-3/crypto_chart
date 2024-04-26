@@ -1,5 +1,6 @@
 import useTotalMarketCodes from '../stores/useTotalMarketCodes';
 import useCryptoInfo from '../stores/useCryptoInfo';
+import { setFontColorByFluctuationRate } from '../utils/setFontColorByFluctuationRate';
 
 const priceLogClass = 'flex justify-between items-center text-[12px] border-b-[1px] border-[lightgray]  border-solid';
 
@@ -20,7 +21,7 @@ export default function DetailHeader() {
 					{/* 위쪽 */}
 					<div className="grid grid-cols-[1fr_1fr] pt-2">
 						<div
-							className={`col-span-2 flex gap-[2px] text-[25px] font-bold ${setFontColor(selectedCryptoInfo[0].change)}`}>
+							className={`col-span-2 flex gap-[2px] text-[25px] font-bold ${setFontColorByFluctuationRate(selectedCryptoInfo[0].change)}`}>
 							<div>
 								{selectedCryptoInfo[0].trade_price ? selectedCryptoInfo[0].trade_price.toLocaleString('ko-KR') : null}
 							</div>
@@ -91,17 +92,4 @@ export default function DetailHeader() {
 			)}
 		</nav>
 	);
-}
-
-function setFontColor(change: 'RISE' | 'EVEN' | 'FALL' | undefined) {
-	switch (change) {
-		case 'RISE':
-			return 'text-[#EF1C1C]';
-		case 'EVEN':
-			return 'text-[#000000]';
-		case 'FALL':
-			return 'text-[#1261C4]';
-		default:
-			return 'text-[#000000]';
-	}
 }
