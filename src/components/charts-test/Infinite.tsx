@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { BusinessDay, CandlestickData, ISeriesApi, ITimeScaleApi } from 'lightweight-charts';
 import { Chart, CandlestickSeries, TimeScale } from 'lightweight-charts-react-wrapper';
 

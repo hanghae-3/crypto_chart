@@ -6,8 +6,11 @@ import { connectWebSocket, getMarketList } from '../utils.ts';
 import { Coins, Marketcode } from '../model/ticker.ts';
 
 const Layout = () => {
+	const query = new URLSearchParams(window.location.search);
+	const coinCode = query.get('code');
 	const [coins, setCoins] = useState<Coins>({});
 	const [marketCodes, setMarketCodes] = useState<Marketcode[]>([]);
+	const currentCoin = coins[coinCode || 'KRW-BTC'];
 
 	useEffect(() => {
 		const init = async () => {
@@ -29,8 +32,8 @@ const Layout = () => {
 
 	return (
 		<div className="w-full p-[40px] bg-gray-100 h-full min-h-screen">
-			<InfoBox coins={coins} marketCodes={marketCodes} />
-			<ChartContainer />
+			<InfoBox currentCoin={currentCoin} marketCodes={marketCodes} />
+			<ChartContainer currentCoin={currentCoin} coinCode={coinCode} />
 			<CoinList coins={coins} marketCodes={marketCodes} />
 		</div>
 	);

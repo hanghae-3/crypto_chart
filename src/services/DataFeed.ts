@@ -12,14 +12,15 @@ export class DataFeed {
 	sequence: 1 | 3 | 5 | 15 | 30 | 60 = 1; // 1분봉
 	count: number = 200; // 200개
 
-	constructor() {
+	constructor(marketCode: string) {
 		const date = new Date();
 		this.data = [];
 		this.earliestTime = getCurrentTime();
 		// this.earliestTime = formatDate(subMinutes(new Date(date), 1));
 		// this.latestTime = formatDate(subMinutes(new Date(date), 1));
 		this.latestTime = formatDate(subMinutes(new Date(date), 1));
-		this.marketCode = 'KRW-BTC';
+		// this.marketCode = 'KRW-BTC';
+		this.marketCode = marketCode;
 	}
 
 	/**
@@ -82,20 +83,24 @@ export class DataFeed {
 		// const time = addMinutes(new Date(this.data.at(-1).kortime), 1);
 
 		const url = UPBIT_CANDLE_REST_URL({
-			marketCode: 'KRW-BTC',
+			marketCode: this.marketCode,
 			date: time,
 			count: 1,
 			type: { time: 'minutes', sequence: this.sequence },
 		});
+		// console.log(url);
+
 		try {
 			const response = await fetch(url);
 			const data = await response.json();
 			// console.log(formatDate(time), data);
 			const diff = differenceInMinutes(data[0].candle_date_time_kst, this.data.at(-1).kortime);
 			// console.log('diff', new Date(this.data.at(-1).kortime), data[0].candle_date_time_kst, diff);
-			console.log(time, data, data[0].candle_date_time_kst, this.data.at(-1).kortime, diff);
+			// console.log(time, data, data[0].candle_date_time_kst, this.data.at(-1).kortime, diff);
+			console.log('diff', diff);
 
-			if (diff <= 0) return;
+			// if (diff <= 0) return;
+			if (diff < 0) return;
 			if (data.length === 0) return;
 
 			this.data.push({
@@ -107,7 +112,7 @@ export class DataFeed {
 				kortime: data[0].candle_date_time_kst,
 			});
 			// this.latestTime = formatDate(new Date(time));
-
+			console.log('time', time);
 			this.latestTime = time;
 		} catch (err) {
 			console.log(err);
@@ -120,7 +125,7 @@ export class DataFeed {
 	 */
 	private async fetchPrevPeriodPrices() {
 		const url = UPBIT_CANDLE_REST_URL({
-			marketCode: 'KRW-BTC',
+			marketCode: this.marketCode,
 			date: this.earliestTime,
 			count: this.count,
 			type: { time: 'minutes', sequence: this.sequence },

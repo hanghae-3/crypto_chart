@@ -1,17 +1,16 @@
-import { Coins, Marketcode } from '../model/ticker.ts';
+import { Coins, Marketcode, Ticker } from '../model/ticker.ts';
 
 interface Props {
-	coins: Coins;
+	currentCoin: Ticker;
 	marketCodes: Marketcode[];
 }
 
-const InfoBox = ({ coins, marketCodes }: Props) => {
+const InfoBox = ({ currentCoin, marketCodes }: Props) => {
 	const query = new URLSearchParams(window.location.search);
 	const coinCode = query.get('code');
-	const currentCoin = coins[coinCode || 'KRW-BTC'];
 	const currentMarket = marketCodes.find((item) => item.market === coinCode);
 
-	if (!coins || !currentCoin || !currentMarket) {
+	if (!currentCoin || !currentMarket) {
 		return <div>loading...</div>;
 	}
 
