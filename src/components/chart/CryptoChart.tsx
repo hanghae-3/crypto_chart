@@ -72,12 +72,16 @@ function CryptoChart({ coinCode, currentCoin, time }: Props) {
 
 			// console.log(currentTime, latestTime);
 			const change = getTimeWhenToChange(time);
-			console.log(change);
+			// console.log(change);
+			console.log(differenceInMinutes(currentTime, latestTime), change);
+
 			if (differenceInMinutes(currentTime, latestTime) >= change) {
 				// dataFeed.current.latestTime = currentTime;
+				console.log('fetch');
+
 				isFetching = true;
 				const candles = await dataFeed.current.getCurrentPrice(currentTime);
-				console.log('update minute', candleSeries, currentTime, latestTime);
+				// console.log('update minute', candleSeries, currentTime, latestTime);
 				if (candles) {
 					// console.log(candles);
 					setData(candles);
@@ -92,7 +96,7 @@ function CryptoChart({ coinCode, currentCoin, time }: Props) {
 				isFetching = false;
 			} else if (!isFetching) {
 				const lastPrice = dataFeed.current?.data.at(-1).close;
-				console.log('update', currentCoin.timestamp);
+				// console.log('update', currentCoin.timestamp);
 				const until = time === '1Min' ? 'minute' : time === '1Hour' ? 'hour' : 'day';
 				currentBar = {
 					// time: convertTimeToLocal(formatDate(new Date(data[0].timestamp))),
@@ -106,7 +110,7 @@ function CryptoChart({ coinCode, currentCoin, time }: Props) {
 				candleSeries.current?.update(currentBar);
 			}
 			isFetching = false;
-		}, 1000);
+		}, 500);
 
 		return () => {
 			clearInterval(intervalId);
@@ -130,8 +134,8 @@ function CryptoChart({ coinCode, currentCoin, time }: Props) {
 	const handleVisibleLogicalRangeChange = useCallback(
 		debounce(async (logicalRange: LogicalRange) => {
 			if (logicalRange.from < 20) {
-				console.log('fetch', logicalRange.from < 10);
 				const barsInfo = await dataFeed.current.getBars();
+				// console.log('fetch', logicalRange.from < 10, barsInfo);
 				if (barsInfo !== null) {
 					setData(barsInfo);
 				}

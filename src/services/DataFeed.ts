@@ -36,7 +36,18 @@ export class DataFeed {
 			this.type = type;
 			// earliestTime를 초기화
 			this.earliestTime = this.initializeTime();
-			this.latestTime = this.earliestTime;
+			console.log(this.earliestTime);
+
+			// this.latestTime = this.earliestTime;
+			if (this.type.time === 'minutes') {
+				if (this.type.sequence === 1) {
+					this.latestTime = formatDate(subMinutes(new Date(), 1));
+				} else {
+					this.latestTime = formatDate(new Date(), 'hour');
+				}
+			} else {
+				this.latestTime = formatDate(new Date(), 'day');
+			}
 			this.data = [];
 		}
 	}
@@ -46,14 +57,24 @@ export class DataFeed {
 			if (this.type.sequence === 1) {
 				return formatDate(subMinutes(new Date(), this.type.sequence));
 			} else {
-				return formatDate(subMinutes(new Date(), this.type.sequence), 'hour');
+				return formatDate(subMinutes(new Date(), 0), 'hour');
 			}
 		} else {
 			return formatDate(subDays(new Date(), 1), 'day');
 		}
 	}
 
-	changeCurrentTime() {}
+	calculateTime(time: Date) {
+		if (this.type.time === 'minutes') {
+			if (this.type.sequence === 1) {
+				return formatDate(subMinutes(time, this.type.sequence));
+			} else {
+				return formatDate(subMinutes(time, this.type.sequence), 'hour');
+			}
+		} else {
+			return formatDate(subDays(time, 1), 'day');
+		}
+	}
 	/**
 	 * @description set market code and initialize data when market code is changed
 	 */
@@ -72,6 +93,7 @@ export class DataFeed {
 		// 정렬된 데이터를 가져옴
 		const prevData = await this.fetchPrevPeriodPrices();
 		if (prevData.length === 0) return;
+		console.log(prevData);
 
 		// 데이터를 변환하는 작업을 진행
 		const candles = prevData.map((item) => {
@@ -89,6 +111,7 @@ export class DataFeed {
 		// fetch된 데이터 중 가장 최근 데이터의 시간을 가져온 후, 시간 차이를 계산
 		const maxTime = prevData.at(-1).candle_date_time_kst + 'Z';
 		const diff = differenceInMinutes(maxTime, this.earliestTime);
+		// console.log('diff', diff);
 
 		// 최초로 fetch된 데이터인지에 따라 데이터를 추가하는 과정이 다름
 		if (this.data.length > 0) {
@@ -96,7 +119,8 @@ export class DataFeed {
 			if (diff <= 0) {
 				// 올바른 데이터를 fetch한 경우
 				this.data = [...candles, ...this.data];
-				this.earliestTime = formatDate(subMinutes(new Date(prevData[0].candle_date_time_kst), 1));
+				// this.earliestTime = formatDate(subMinutes(new Date(prevData[0].candle_date_time_kst), 1));
+				this.earliestTime = this.calculateTime(new Date(prevData[0].candle_date_time_kst));
 			}
 		} else {
 			this.data = [...candles];
@@ -119,15 +143,15 @@ export class DataFeed {
 			count: 1,
 			type: this.type,
 		});
-		// console.log(url);
+		console.log(url);
 
 		try {
 			const response = await fetch(url);
 			const data = await response.json();
-			const diff = differenceInMinutes(data[0].candle_date_time_kst, this.data.at(-1).kortime);
+			// const diff = differenceInMinutes(data[0].candle_date_time_kst, this.data.at(-1).kortime);
 
 			// if (diff <= 0) return;
-			if (diff < 0) return;
+			// if (diff < 0) return;
 			if (data.length === 0) return;
 
 			this.data.push({
@@ -138,8 +162,17 @@ export class DataFeed {
 				close: data[0].trade_price,
 				kortime: data[0].candle_date_time_kst,
 			});
-			// this.latestTime = formatDate(new Date(time));
-			this.latestTime = time;
+
+			if (this.type.time === 'minutes') {
+				if (this.type.sequence === 1) {
+					this.latestTime = formatDate(subMinutes(new Date(), 1));
+				} else {
+					this.latestTime = formatDate(new Date(), 'hour');
+				}
+			} else {
+				this.latestTime = formatDate(new Date(), 'day');
+			}
+			// this.latestTime = time;
 		} catch (err) {
 			console.log(err);
 		}
@@ -160,12 +193,14 @@ export class DataFeed {
 
 		try {
 			// console.log(url);
+			// console.log(url);
 			const response = await fetch(url);
 			const data = await response.json();
 			const sortedData = data.sort(
 				(a: any, b: any) => new Date(a.candle_date_time_kst) - new Date(b.candle_date_time_kst),
 			);
 			// this.earliestTime = formatDate(subMinutes(new Date(sortedData[0].candle_date_time_kst), 1));
+			// console.log(url, sortedData, data);
 
 			return sortedData;
 		} catch (err) {}
