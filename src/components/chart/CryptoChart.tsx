@@ -71,7 +71,9 @@ function CryptoChart({ coinCode, currentCoin, time }: Props) {
 			// console.log(currentTime);
 
 			// console.log(currentTime, latestTime);
-			if (differenceInMinutes(currentTime, latestTime) >= 1) {
+			const change = getTimeWhenToChange(time);
+			console.log(change);
+			if (differenceInMinutes(currentTime, latestTime) >= change) {
 				// dataFeed.current.latestTime = currentTime;
 				isFetching = true;
 				const candles = await dataFeed.current.getCurrentPrice(currentTime);
@@ -91,9 +93,10 @@ function CryptoChart({ coinCode, currentCoin, time }: Props) {
 			} else if (!isFetching) {
 				const lastPrice = dataFeed.current?.data.at(-1).close;
 				console.log('update', currentCoin.timestamp);
+				const until = time === '1Min' ? 'minute' : time === '1Hour' ? 'hour' : 'day';
 				currentBar = {
 					// time: convertTimeToLocal(formatDate(new Date(data[0].timestamp))),
-					time: new Date(formatDate(new Date(currentCoin.timestamp))).valueOf() / 1000,
+					time: new Date(formatDate(new Date(currentCoin.timestamp), until)).valueOf() / 1000,
 					open: lastPrice,
 					high: Math.max(currentCoin.trade_price, currentBar.high || 0),
 					low: Math.min(currentCoin.trade_price, currentBar.low || Infinity),
@@ -193,4 +196,10 @@ function formatDateFeedTypes(time: CanSelectTime): Times {
 			time: 'days',
 		};
 	}
+}
+
+function getTimeWhenToChange(time: CanSelectTime) {
+	if (time === '1Min') return 1;
+	else if (time === '1Hour') return 60;
+	else return 1440;
 }

@@ -1,4 +1,4 @@
-import { differenceInMinutes, subMinutes } from 'date-fns';
+import { differenceInMinutes, subDays, subMinutes } from 'date-fns';
 import { convertTimeToLocal, formatDate, getCurrentTime } from '../utils/date/date';
 import { Times, UPBIT_CANDLE_REST_URL } from '../constants/url';
 import { isEqual } from 'lodash';
@@ -34,9 +34,26 @@ export class DataFeed {
 			return;
 		} else {
 			this.type = type;
+			// earliestTime를 초기화
+			this.earliestTime = this.initializeTime();
+			this.latestTime = this.earliestTime;
 			this.data = [];
 		}
 	}
+
+	initializeTime() {
+		if (this.type.time === 'minutes') {
+			if (this.type.sequence === 1) {
+				return formatDate(subMinutes(new Date(), this.type.sequence));
+			} else {
+				return formatDate(subMinutes(new Date(), this.type.sequence), 'hour');
+			}
+		} else {
+			return formatDate(subDays(new Date(), 1), 'day');
+		}
+	}
+
+	changeCurrentTime() {}
 	/**
 	 * @description set market code and initialize data when market code is changed
 	 */
