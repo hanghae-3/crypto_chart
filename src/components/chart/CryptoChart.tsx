@@ -12,10 +12,12 @@ import { debounce } from 'lodash';
 import { convertTimeToLocal, formatDate, getCurrentTime } from '../../utils/date/date';
 import { differenceInMinutes, subMinutes } from 'date-fns';
 
+import Clock from 'react-live-clock';
 import { Ticker } from '../../model/ticker';
 import TimeSelector from './TimeSelector';
 import { CanSelectTime } from '../../model/time';
 import { Times } from '../../constants/url';
+import CurrentTime from './CurrentTime';
 
 // https://codesandbox.io/p/sandbox/lightweight-charts-react-wrapper-infinite-history-hdymls?file=%2Fexample.tsx
 // https://tradingview.github.io/lightweight-charts/tutorials/demos/infinite-history
@@ -178,6 +180,10 @@ function CryptoChart({ coinCode, currentCoin, time }: Props) {
 					<CandlestickSeries ref={candleSeries} data={data} reactive={true} />
 					<div className="absolute z-10 top-2" ref={tooltipRef}></div>
 				</Chart>
+			</div>
+
+			<div>
+				<CurrentTime />
 			</div>
 		</div>
 	);
