@@ -13,6 +13,9 @@ import { convertTimeToLocal, formatDate, getCurrentTime } from '../../utils/date
 import { differenceInMinutes, subMinutes } from 'date-fns';
 
 import { Ticker } from '../../model/ticker';
+import TimeSelector from './TimeSelector';
+import { CanSelectTime } from '../../model/time';
+import { Times } from '../../constants/url';
 
 // https://codesandbox.io/p/sandbox/lightweight-charts-react-wrapper-infinite-history-hdymls?file=%2Fexample.tsx
 // https://tradingview.github.io/lightweight-charts/tutorials/demos/infinite-history
@@ -22,8 +25,9 @@ const height = 600;
 type Props = {
 	currentCoin: Ticker;
 	coinCode: string;
+	time: CanSelectTime;
 };
-function Charts({ coinCode, currentCoin }: Props) {
+function CryptoChart({ coinCode, currentCoin, time }: Props) {
 	const chartRef = useRef<IChartApi>(null);
 	const timeScale = useRef<ITimeScaleApi<any>>(null);
 	const candleSeries = useRef<ISeriesApi<'Candlestick'>>(null);
@@ -34,12 +38,16 @@ function Charts({ coinCode, currentCoin }: Props) {
 
 	useEffect(() => {
 		async function initializeData() {
+			const dateFeedTypes = formatDateFeedTypes(time);
+			dataFeed.current.setType(dateFeedTypes);
 			const candles = await dataFeed.current.getBars();
+			console.log(candles);
+
 			setData(candles);
 		}
 
 		initializeData();
-	}, []);
+	}, [time]);
 
 	useEffect(() => {
 		let isFetching = false;
@@ -48,8 +56,10 @@ function Charts({ coinCode, currentCoin }: Props) {
 			high: null,
 			low: null,
 			close: null,
-			time: getCurrentTime(),
+			// time: getCurrentTime(),
+			time: null,
 		};
+
 		const intervalId = setInterval(async () => {
 			// dataFeed.current.getCurrentPrice();
 			// setData(dataFeed.current.data);
@@ -61,14 +71,13 @@ function Charts({ coinCode, currentCoin }: Props) {
 			// console.log(currentTime);
 
 			// console.log(currentTime, latestTime);
-			console.log('start');
 			if (differenceInMinutes(currentTime, latestTime) >= 1) {
 				// dataFeed.current.latestTime = currentTime;
 				isFetching = true;
 				const candles = await dataFeed.current.getCurrentPrice(currentTime);
 				console.log('update minute', candleSeries, currentTime, latestTime);
 				if (candles) {
-					// console.log(candles);x
+					// console.log(candles);
 					setData(candles);
 					currentBar = {
 						open: null,
@@ -80,19 +89,11 @@ function Charts({ coinCode, currentCoin }: Props) {
 				}
 				isFetching = false;
 			} else if (!isFetching) {
-				console.log('Realtime', formatDate(new Date(currentCoin.timestamp)));
-				// console.log(dataFeed.current.data);
-
 				const lastPrice = dataFeed.current?.data.at(-1).close;
-				// const response = await fetch(`https://api.upbit.com/v1/ticker?markets=KRW-BTC`);
-				// const data = await response.json();
-				// console.log(data);
-
+				console.log('update', currentCoin.timestamp);
 				currentBar = {
 					// time: convertTimeToLocal(formatDate(new Date(data[0].timestamp))),
-					// time: convertTimeToLocal(formatDate(new Date(data[0].timestamp))),
 					time: new Date(formatDate(new Date(currentCoin.timestamp))).valueOf() / 1000,
-					// open: lastPrice,
 					open: lastPrice,
 					high: Math.max(currentCoin.trade_price, currentBar.high || 0),
 					low: Math.min(currentCoin.trade_price, currentBar.low || Infinity),
@@ -102,7 +103,6 @@ function Charts({ coinCode, currentCoin }: Props) {
 				candleSeries.current?.update(currentBar);
 			}
 			isFetching = false;
-			// console.log(data);
 		}, 1000);
 
 		return () => {
@@ -126,14 +126,14 @@ function Charts({ coinCode, currentCoin }: Props) {
 	 */
 	const handleVisibleLogicalRangeChange = useCallback(
 		debounce(async (logicalRange: LogicalRange) => {
-			if (logicalRange.from < 10) {
+			if (logicalRange.from < 20) {
 				console.log('fetch', logicalRange.from < 10);
 				const barsInfo = await dataFeed.current.getBars();
 				if (barsInfo !== null) {
 					setData(barsInfo);
 				}
 			}
-		}, 400),
+		}, 300),
 		[],
 	);
 
@@ -164,6 +164,7 @@ function Charts({ coinCode, currentCoin }: Props) {
 
 	return (
 		<div className="w-[30vw]">
+			<TimeSelector />
 			<div className="container relative">
 				<Chart width={width} height={height} ref={chartRef} onCrosshairMove={handleCrosshairMove}>
 					<TimeScale ref={timeScale} onVisibleLogicalRangeChange={handleVisibleLogicalRangeChange} timeVisible />
@@ -174,4 +175,22 @@ function Charts({ coinCode, currentCoin }: Props) {
 		</div>
 	);
 }
-export default Charts;
+export default CryptoChart;
+
+function formatDateFeedTypes(time: CanSelectTime): Times {
+	if (time === '1Min') {
+		return {
+			time: 'minutes',
+			sequence: 1,
+		};
+	} else if (time === '1Hour') {
+		return {
+			time: 'minutes',
+			sequence: 60,
+		};
+	} else {
+		return {
+			time: 'days',
+		};
+	}
+}

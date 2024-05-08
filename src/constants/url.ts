@@ -1,10 +1,12 @@
 export const UPBIT_MARKET_CODE_REST_URL = 'https://api.upbit.com/v1/market/all?isDetails=false';
 
+export type Times = { time: 'days' } | { time: 'minutes'; sequence: 1 | 3 | 5 | 15 | 30 | 60 };
+
 type Props = {
 	marketCode: string;
 	date: string;
 	count: number;
-	type: { time: 'days' } | { time: 'minutes'; sequence: 1 | 3 | 5 | 15 | 30 | 60 };
+	type: Times;
 };
 
 /**

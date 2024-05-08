@@ -1,6 +1,7 @@
 import { differenceInMinutes, subMinutes } from 'date-fns';
 import { convertTimeToLocal, formatDate, getCurrentTime } from '../utils/date/date';
-import { UPBIT_CANDLE_REST_URL } from '../constants/url';
+import { Times, UPBIT_CANDLE_REST_URL } from '../constants/url';
+import { isEqual } from 'lodash';
 
 //https://github.com/tradingview/lightweight-charts/blob/7104e9a4fb399f18db7a2868a91b3246014c4324/docs/time-zones.md
 
@@ -9,7 +10,11 @@ export class DataFeed {
 	data: any[];
 	earliestTime: string; // 가져온 시간 중 가장 오래된 시간
 	latestTime: string; // 가장 최근 시간
-	sequence: 1 | 3 | 5 | 15 | 30 | 60 = 1; // 1분봉
+	type: Times = {
+		time: 'minutes',
+		sequence: 1,
+	};
+	// sequence: 1 | 3 | 5 | 15 | 30 | 60 = 1; // 1분봉
 	count: number = 200; // 200개
 
 	constructor(marketCode: string) {
@@ -23,6 +28,15 @@ export class DataFeed {
 		this.marketCode = marketCode;
 	}
 
+	setType(type: Times) {
+		if (isEqual(this.type, type)) {
+			console.log('same');
+			return;
+		} else {
+			this.type = type;
+			this.data = [];
+		}
+	}
 	/**
 	 * @description set market code and initialize data when market code is changed
 	 */
@@ -86,18 +100,14 @@ export class DataFeed {
 			marketCode: this.marketCode,
 			date: time,
 			count: 1,
-			type: { time: 'minutes', sequence: this.sequence },
+			type: this.type,
 		});
 		// console.log(url);
 
 		try {
 			const response = await fetch(url);
 			const data = await response.json();
-			// console.log(formatDate(time), data);
 			const diff = differenceInMinutes(data[0].candle_date_time_kst, this.data.at(-1).kortime);
-			// console.log('diff', new Date(this.data.at(-1).kortime), data[0].candle_date_time_kst, diff);
-			// console.log(time, data, data[0].candle_date_time_kst, this.data.at(-1).kortime, diff);
-			console.log('diff', diff);
 
 			// if (diff <= 0) return;
 			if (diff < 0) return;
@@ -112,7 +122,6 @@ export class DataFeed {
 				kortime: data[0].candle_date_time_kst,
 			});
 			// this.latestTime = formatDate(new Date(time));
-			console.log('time', time);
 			this.latestTime = time;
 		} catch (err) {
 			console.log(err);
@@ -128,7 +137,8 @@ export class DataFeed {
 			marketCode: this.marketCode,
 			date: this.earliestTime,
 			count: this.count,
-			type: { time: 'minutes', sequence: this.sequence },
+			// type: { time: 'minutes', sequence: this.sequence },
+			type: this.type,
 		});
 
 		try {
