@@ -1,8 +1,3 @@
-export interface ImarketCodes {
-	market: string;
-	korean_name: string;
-	english_name: string;
-}
 
 export type RequestType = 'ticker' | 'orderbook' | 'trade';
 export type ChangeType = 'RISE' | 'EVEN' | 'FALL';

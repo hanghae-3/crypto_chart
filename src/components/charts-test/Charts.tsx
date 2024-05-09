@@ -57,7 +57,6 @@ export default function Charts() {
 
 			// console.log(currentTime, latestTime);
 			if (differenceInMinutes(currentTime, latestTime) >= 1) {
-				console.log('update minute');
 				// dataFeed.current.latestTime = currentTime;
 				const candles = await dataFeed.current.getCurrentPrice(currentTime);
 				if (candles) {
@@ -76,7 +75,6 @@ export default function Charts() {
 				const lastPrice = dataFeed.current.data.at(-1).close;
 				const response = await fetch('https://api.upbit.com/v1/ticker?markets=KRW-BTC');
 				const data = await response.json();
-				console.log(data);
 
 				currentBar = {
 					// time: convertTimeToLocal(formatDate(new Date(data[0].timestamp))),

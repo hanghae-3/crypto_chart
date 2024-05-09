@@ -1,3 +1,5 @@
+import { formatNumber } from './utils/format.ts';
+
 export const getMarketList = async () => {
 	const res = await fetch('https://api.upbit.com/v1/market/all');
 	const data = await res.json();
@@ -21,4 +23,11 @@ export const connectWebSocket = (marketCodes: string[], onMessage) => {
 	};
 
 	return socket;
+};
+
+export const formatToMillion = (num: number) => {
+	if (num < 1000000) return formatNumber(+num.toFixed(0));
+	else {
+		return `${formatNumber(+(num / 1000000).toFixed(0))}`;
+	}
 };
