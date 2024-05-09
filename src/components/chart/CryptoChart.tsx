@@ -112,7 +112,7 @@ function CryptoChart({ coinCode, currentCoin, time }: Props) {
 				candleSeries.current?.update(currentBar);
 			}
 			isFetching = false;
-		}, 500);
+		}, 100);
 
 		return () => {
 			clearInterval(intervalId);
