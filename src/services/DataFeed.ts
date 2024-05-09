@@ -1,6 +1,7 @@
-import { differenceInMinutes, subMinutes } from 'date-fns';
+import { differenceInMinutes, subDays, subMinutes } from 'date-fns';
 import { convertTimeToLocal, formatDate, getCurrentTime } from '../utils/date/date';
-import { UPBIT_CANDLE_REST_URL } from '../constants/url';
+import { Times, UPBIT_CANDLE_REST_URL } from '../constants/url';
+import { isEqual } from 'lodash';
 
 //https://github.com/tradingview/lightweight-charts/blob/7104e9a4fb399f18db7a2868a91b3246014c4324/docs/time-zones.md
 
@@ -9,19 +10,71 @@ export class DataFeed {
 	data: any[];
 	earliestTime: string; // 가져온 시간 중 가장 오래된 시간
 	latestTime: string; // 가장 최근 시간
-	sequence: 1 | 3 | 5 | 15 | 30 | 60 = 1; // 1분봉
+	type: Times = {
+		time: 'minutes',
+		sequence: 1,
+	};
+	// sequence: 1 | 3 | 5 | 15 | 30 | 60 = 1; // 1분봉
 	count: number = 200; // 200개
 
-	constructor() {
+	constructor(marketCode: string) {
 		const date = new Date();
 		this.data = [];
 		this.earliestTime = getCurrentTime();
 		// this.earliestTime = formatDate(subMinutes(new Date(date), 1));
 		// this.latestTime = formatDate(subMinutes(new Date(date), 1));
 		this.latestTime = formatDate(subMinutes(new Date(date), 1));
-		this.marketCode = 'KRW-BTC';
+		// this.marketCode = 'KRW-BTC';
+		this.marketCode = marketCode;
 	}
 
+	setType(type: Times) {
+		if (isEqual(this.type, type)) {
+			console.log('same');
+			return;
+		} else {
+			this.type = type;
+			// earliestTime를 초기화
+			this.earliestTime = this.initializeTime();
+			console.log(this.earliestTime);
+
+			// this.latestTime = this.earliestTime;
+			if (this.type.time === 'minutes') {
+				if (this.type.sequence === 1) {
+					this.latestTime = formatDate(subMinutes(new Date(), 1));
+				} else {
+					this.latestTime = formatDate(new Date(), 'hour');
+				}
+			} else {
+				this.latestTime = formatDate(new Date(), 'day');
+			}
+			this.data = [];
+		}
+	}
+
+	initializeTime() {
+		if (this.type.time === 'minutes') {
+			if (this.type.sequence === 1) {
+				return formatDate(subMinutes(new Date(), this.type.sequence));
+			} else {
+				return formatDate(subMinutes(new Date(), 0), 'hour');
+			}
+		} else {
+			return formatDate(subDays(new Date(), 1), 'day');
+		}
+	}
+
+	calculateTime(time: Date) {
+		if (this.type.time === 'minutes') {
+			if (this.type.sequence === 1) {
+				return formatDate(subMinutes(time, this.type.sequence));
+			} else {
+				return formatDate(subMinutes(time, this.type.sequence), 'hour');
+			}
+		} else {
+			return formatDate(subDays(time, 1), 'day');
+		}
+	}
 	/**
 	 * @description set market code and initialize data when market code is changed
 	 */
@@ -40,6 +93,7 @@ export class DataFeed {
 		// 정렬된 데이터를 가져옴
 		const prevData = await this.fetchPrevPeriodPrices();
 		if (prevData.length === 0) return;
+		console.log(prevData);
 
 		// 데이터를 변환하는 작업을 진행
 		const candles = prevData.map((item) => {
@@ -57,6 +111,7 @@ export class DataFeed {
 		// fetch된 데이터 중 가장 최근 데이터의 시간을 가져온 후, 시간 차이를 계산
 		const maxTime = prevData.at(-1).candle_date_time_kst + 'Z';
 		const diff = differenceInMinutes(maxTime, this.earliestTime);
+		// console.log('diff', diff);
 
 		// 최초로 fetch된 데이터인지에 따라 데이터를 추가하는 과정이 다름
 		if (this.data.length > 0) {
@@ -64,7 +119,8 @@ export class DataFeed {
 			if (diff <= 0) {
 				// 올바른 데이터를 fetch한 경우
 				this.data = [...candles, ...this.data];
-				this.earliestTime = formatDate(subMinutes(new Date(prevData[0].candle_date_time_kst), 1));
+				// this.earliestTime = formatDate(subMinutes(new Date(prevData[0].candle_date_time_kst), 1));
+				this.earliestTime = this.calculateTime(new Date(prevData[0].candle_date_time_kst));
 			}
 		} else {
 			this.data = [...candles];
@@ -82,20 +138,20 @@ export class DataFeed {
 		// const time = addMinutes(new Date(this.data.at(-1).kortime), 1);
 
 		const url = UPBIT_CANDLE_REST_URL({
-			marketCode: 'KRW-BTC',
+			marketCode: this.marketCode,
 			date: time,
 			count: 1,
-			type: { time: 'minutes', sequence: this.sequence },
+			type: this.type,
 		});
+		console.log(url);
+
 		try {
 			const response = await fetch(url);
 			const data = await response.json();
-			// console.log(formatDate(time), data);
-			const diff = differenceInMinutes(data[0].candle_date_time_kst, this.data.at(-1).kortime);
-			// console.log('diff', new Date(this.data.at(-1).kortime), data[0].candle_date_time_kst, diff);
-			console.log(time, data, data[0].candle_date_time_kst, this.data.at(-1).kortime, diff);
+			// const diff = differenceInMinutes(data[0].candle_date_time_kst, this.data.at(-1).kortime);
 
-			if (diff <= 0) return;
+			// if (diff <= 0) return;
+			// if (diff < 0) return;
 			if (data.length === 0) return;
 
 			this.data.push({
@@ -106,9 +162,17 @@ export class DataFeed {
 				close: data[0].trade_price,
 				kortime: data[0].candle_date_time_kst,
 			});
-			// this.latestTime = formatDate(new Date(time));
 
-			this.latestTime = time;
+			if (this.type.time === 'minutes') {
+				if (this.type.sequence === 1) {
+					this.latestTime = formatDate(subMinutes(new Date(), 1));
+				} else {
+					this.latestTime = formatDate(new Date(), 'hour');
+				}
+			} else {
+				this.latestTime = formatDate(new Date(), 'day');
+			}
+			// this.latestTime = time;
 		} catch (err) {
 			console.log(err);
 		}
@@ -120,13 +184,15 @@ export class DataFeed {
 	 */
 	private async fetchPrevPeriodPrices() {
 		const url = UPBIT_CANDLE_REST_URL({
-			marketCode: 'KRW-BTC',
+			marketCode: this.marketCode,
 			date: this.earliestTime,
 			count: this.count,
-			type: { time: 'minutes', sequence: this.sequence },
+			// type: { time: 'minutes', sequence: this.sequence },
+			type: this.type,
 		});
 
 		try {
+			// console.log(url);
 			// console.log(url);
 			const response = await fetch(url);
 			const data = await response.json();
@@ -134,6 +200,7 @@ export class DataFeed {
 				(a: any, b: any) => new Date(a.candle_date_time_kst) - new Date(b.candle_date_time_kst),
 			);
 			// this.earliestTime = formatDate(subMinutes(new Date(sortedData[0].candle_date_time_kst), 1));
+			// console.log(url, sortedData, data);
 
 			return sortedData;
 		} catch (err) {}

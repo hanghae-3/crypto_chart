@@ -25,7 +25,11 @@
     "noImplicitAny": false,
   },
   "include": [
-    "src"
+    "src",
+    "**/*.tsx",
+    "**/*.ts",
+    "**/*.js",
+    "**/*.jsx"
   ],
   "references": [
     {

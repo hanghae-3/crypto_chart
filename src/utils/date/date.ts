@@ -1,8 +1,10 @@
 import { format } from 'date-fns';
 
-export function formatDate(date: Date) {
+export function formatDate(date: Date, until: 'minute' | 'hour' | 'day' = 'minute') {
 	// return format(date, 'yyyy-MM-dd') + 'T' + format(date, 'HH:mm:ss') + 'Z';
-	return format(date, 'yyyy-MM-dd') + 'T' + format(date, 'HH:mm') + ':00Z';
+	if (until === 'minute') return format(date, 'yyyy-MM-dd') + 'T' + format(date, 'HH:mm') + ':00Z';
+	else if (until === 'hour') return format(date, 'yyyy-MM-dd') + 'T' + format(date, 'HH') + ':00:00Z';
+	else return format(date, 'yyyy-MM-dd') + 'T09:00:00Z';
 }
 export function getCurrentTime() {
 	const dateStr = formatDate(new Date());
