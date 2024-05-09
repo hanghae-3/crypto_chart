@@ -12,7 +12,6 @@ import { debounce } from 'lodash';
 import { convertTimeToLocal, formatDate, getCurrentTime } from '../../utils/date/date';
 import { differenceInMinutes, subMinutes } from 'date-fns';
 
-import Clock from 'react-live-clock';
 import { Ticker } from '../../model/ticker';
 import TimeSelector from './TimeSelector';
 import { CanSelectTime } from '../../model/time';

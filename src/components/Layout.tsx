@@ -19,8 +19,8 @@ const Layout = () => {
 			const coins = marketCodes.filter((item) => item.market.includes('KRW')).map((item) => item.market);
 			connectWebSocket(coins, (data) => {
 				setCoins((prevCoins) => {
-					const newCoins = { ...prevCoins }; // 기존 상태 복사
-					newCoins[data.code] = data; // 새 데이터로 해당 코인 정보 업데이트
+					const newCoins = { ...prevCoins };
+					newCoins[data.code] = data;
 					return newCoins;
 				});
 			});
@@ -35,6 +35,8 @@ const Layout = () => {
 			<InfoBox currentCoin={currentCoin} marketCodes={marketCodes} />
 			<ChartContainer currentCoin={currentCoin} coinCode={coinCode} />
 			<CoinList coins={coins} marketCodes={marketCodes} />
+			{/* <InfoBox currentCoin={coins[coinCode || 'KRW-BTC']} marketCodes={marketCodes} /> */}
+			{/* <ChartContainer /> */}
 		</div>
 	);
 };
