@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { Ticker } from '../model/ticker';
 import CryptoChart from './chart/CryptoChart';

@@ -18,7 +18,7 @@ class WebSocketService {
 			this.socket = new WebSocket('wss://api.upbit.com/websocket/v1');
 			this.socket.onopen = () => {
 				const message = JSON.stringify([{ ticket: 'uniqueTicket' }, { type: 'ticker', codes: marketCodes }]);
-				this.socket.send(message);
+				this.socket?.send(message);
 			};
 
 			this.socket.onmessage = (event) => {

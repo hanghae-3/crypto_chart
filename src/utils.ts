@@ -16,7 +16,7 @@ export const connectWebSocket = (marketCodes: string[], onMessage) => {
 	socket.onmessage = (event) => {
 		const reader = new FileReader();
 		reader.onload = () => {
-			const data = JSON.parse(reader.result);
+			const data = JSON.parse(reader?.result as string);
 			onMessage(data);
 		};
 		reader.readAsText(event.data);

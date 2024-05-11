@@ -8,7 +8,7 @@ import WebSocketService from '../utils/websocket.ts';
 
 const Layout = () => {
 	const query = new URLSearchParams(window.location.search);
-	const coinCode = query.get('code');
+	const coinCode = query.get('code') as string;
 	const [coins, setCoins] = useState<Coins>({});
 	const [marketCodes, setMarketCodes] = useState<Marketcode[]>([]);
 	const currentCoin = coins[coinCode || 'KRW-BTC'];
