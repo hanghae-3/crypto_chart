@@ -35,7 +35,7 @@ module.exports = {
 		'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 		'import/extensions': ['off'],
 		'camelcase': 'off',
-		'no-unused-vars': 'off',
+		'no-unused-vars': ['off'],
 		'react/react-in-jsx-scope': 'off',
 		'no-mixed-spaces-and-tabs': 'off',
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
