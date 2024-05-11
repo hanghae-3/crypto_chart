@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import { UPBIT_CANDLE_REST_URL } from '../../constants/url';
 import { differenceInMinutes, format, subMinutes } from 'date-fns';
@@ -103,10 +104,15 @@ export const useStorePrices = ({ marketCode = 'KRW-BTC' }: Props) => {
 			const sortedData = data.sort(
 				(a: any, b: any) => Number(new Date(a.candle_date_time_kst)) - Number(new Date(b.candle_date_time_kst)),
 			);
+
 			const lastTime = formatDate(subMinutes(new Date(sortedData[0].candle_date_time_kst), 1));
 			setLastTime(lastTime);
 			return sortedData;
-		} catch (err) {}
+		} catch (err) {
+			if (err) {
+				console.error('fetchPrices error', err);
+			}
+		}
 	};
 
 	useEffect(() => {

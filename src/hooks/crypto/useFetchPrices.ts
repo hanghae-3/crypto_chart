@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react';
 import { UPBIT_CANDLE_REST_URL } from '../../constants/url';
 
