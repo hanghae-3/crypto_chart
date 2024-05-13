@@ -42,7 +42,7 @@ const Coin = ({ coin, marketCodes }: Props) => {
 
 	return (
 		<div
-			className="flex cursor-pointer justify-between bg-white p-[20px] border-b border-solid border-gray-300"
+			className="flex cursor-pointer justify-between p-[20px] border-b border-solid border-gray-300"
 			onClick={() => navigate(`/exchanges?code=${coin[0]}`)}
 			key={coin[1].code}>
 			<div className="flex-1">
@@ -53,7 +53,7 @@ const Coin = ({ coin, marketCodes }: Props) => {
 			</div>
 
 			<div
-				className={`flex justify-end flex-1 justify-between bg-white ${
+				className={`flex justify-end flex-1 justify-between ${
 					coin[1].change === 'RISE' ? 'text-red-500' : 'text-blue-500'
 				} ${
 					diffPrice === 'rise'

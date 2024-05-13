@@ -11,7 +11,7 @@ type Props = {
 const ChartContainer = ({ currentCoin, coinCode }: Props) => {
 	const { time } = useTimeStore();
 	return (
-		<div className="h-full">
+		<div className="">
 			<ErrorBoundary FallbackComponent={ErrorFallback}>
 				<CryptoChart currentCoin={currentCoin} coinCode={coinCode} time={time} />
 			</ErrorBoundary>
