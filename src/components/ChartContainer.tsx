@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { Ticker } from '../model/ticker';
 import CryptoChart from './chart/CryptoChart';
@@ -10,7 +11,7 @@ type Props = {
 const ChartContainer = ({ currentCoin, coinCode }: Props) => {
 	const { time } = useTimeStore();
 	return (
-		<div className="h-full">
+		<div className="">
 			<ErrorBoundary FallbackComponent={ErrorFallback}>
 				<CryptoChart currentCoin={currentCoin} coinCode={coinCode} time={time} />
 			</ErrorBoundary>

@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useState } from 'react';
 import { UPBIT_CANDLE_REST_URL } from '../../constants/url';
 
 type Props = {
@@ -26,5 +27,5 @@ export const useFetchPrices = ({ marketCode, date }: Props) => {
 		}
 	};
 
-	return { prices };
+	return { prices, fetchPrices };
 };

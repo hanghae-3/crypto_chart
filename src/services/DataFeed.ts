@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { differenceInMinutes, subDays, subMinutes } from 'date-fns';
 import { convertTimeToLocal, formatDate, getCurrentTime } from '../utils/date/date';
 import { Times, UPBIT_CANDLE_REST_URL } from '../constants/url';
@@ -197,12 +198,14 @@ export class DataFeed {
 			const response = await fetch(url);
 			const data = await response.json();
 			const sortedData = data.sort(
-				(a: any, b: any) => new Date(a.candle_date_time_kst) - new Date(b.candle_date_time_kst),
+				(a: any, b: any) => Number(new Date(a.candle_date_time_kst)) - Number(new Date(b.candle_date_time_kst)),
 			);
 			// this.earliestTime = formatDate(subMinutes(new Date(sortedData[0].candle_date_time_kst), 1));
 			// console.log(url, sortedData, data);
 
 			return sortedData;
-		} catch (err) {}
+		} catch (err) {
+			console.log(err);
+		}
 	}
 }
