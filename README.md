@@ -1,13 +1,25 @@
-
 # 서비스 바로가기
+
 - [Crypto-Chart](https://crypto-currency-charts.netlify.app/)
 
 
+# Table Of Contents(TOC)
+
+- [ProjectName](#Project)
+- [TeamIntrtroduction](#TeamIntrtroduction)
+- [HowToWork](#HowToWork)
+- [ProjectSettings](#ProjectSettings)
+- [Usage](#Usage)
+- [ReferenceDocument](#Reference-Document)
+
 # Project
 
-## Crypto-Chart
+## Name
+
+Crypto-Chart
 
 # Project Description
+
 
 Crypto-Chart는 실시간 암호화폐 정보를 사용자에게 제공하는 웹 애플리케이션입니다. 이 서비스를 통해 사용자는 다음과 같은 기능을 이용할 수 있습니다:
 
@@ -20,10 +32,20 @@ Crypto-Chart는 실시간 암호화폐 정보를 사용자에게 제공하는 �
 ## Project Skill
 
 
+<div>
+<img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
+<img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white">
+<br/>
 <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black">
 <br/>
+<img src="https://img.shields.io/badge/-React%20Query-FF4154?style=for-the-badge&logo=react%20query&logoColor=white">
+<img src="https://img.shields.io/badge/zustand-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB">
+<br/>
+<img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white">
+<br />
+<img src="https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white">
 
-
+<img src="https://img.shields.io/badge/jira-%230A0FFF.svg?style=for-the-badge&logo=jira&logoColor=white">
 <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
 <img src="https://img.shields.io/badge/tailwind-181717?style=for-the-badge&logo=tailwindcss&logoColor=blue">
@@ -99,15 +121,10 @@ Crypto-Chart는 실시간 암호화폐 정보를 사용자에게 제공하는 �
  ┗ 📜vite-env.d.ts 
  ```
 
-## Project Naming Convention
-
-1. 네이밍 컨벤션을 작성
-
-# Usage
 
 1. git clone
 
-``` js
+```js
   git clone https://github.com/hanghae-3/crypto_chart.git
 ```
 
@@ -121,9 +138,11 @@ npm install
 4. 실행
 
 ```
-npm run start
+npm run dev
+
 ```
 
 # Reference Document
 
 1. 업비트 api 제공사이트(https://docs.upbit.com/docs/market-all)
+
