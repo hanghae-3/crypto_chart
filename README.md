@@ -1,6 +1,6 @@
 
 # 서비스 바로가기
-- description
+- [Crypto-Chart](https://crypto-currency-charts.netlify.app/)
 
 
 # Table Of Contents(TOC)
@@ -19,9 +19,10 @@
 
 ## Project Description
 
-- 암호화폐 정보들의 가독성을 위해서 레이아웃을 좀 더 잘 배치하려고 합니다.
-- 암호화폐를 보고 싶을 때, 원하는 암호화폐를 선택하여 볼 수 있게 해줍니다.
-- 또한 그래프 위에 원하는 그림을 그릴 수 있습니다.
+- 선택된 암호화폐 정보를 실시간으로 확인할 수 있습니다.
+- 선택된 암호화폐 정보를 차트로 확인할 수 있습니다.
+- 제공하는 암호화폐 리스트 정보를 확인할 수 있습니다.
+- 리스트에서 암호화폐 선택시 해당 암호화폐 정보를 확인할 수 있습니다.
 
 ## Project Skill
 
@@ -35,17 +36,12 @@
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
 </div>
 
-# Team 소개
-
-## 팀원 1
-
-## 팀원 2
-
-## 팀원 3
-
 # How To Work
 
 1. 우리는 이렇게 개발했습니다 내용 작성
+## 팀원 1
+
+## 팀원 2
 
 # Project Settings
 
@@ -63,8 +59,25 @@
 
 # Usage
 
-1. 어떻게 프로젝트 실행이 가능한가 작성
+1. git clone
+
+``` js
+  git clone https://github.com/hanghae-3/crypto_chart.git
+```
+
+2. crypto_chart 폴더를 인터프린터나 컴파일러로 열기
+3. 필요한 라이브러리 설치
+
+```
+npm install
+```
+
+4. 실행
+
+```
+npm run start
+```
 
 # Reference Document
 
-1. 추가 참고문서 작성
+1. 업비트 api 제공사이트(https://docs.upbit.com/docs/market-all)

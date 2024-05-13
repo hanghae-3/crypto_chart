@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { connectWebSocket, getMarketList } from '../../utils';
 import { Coins, Marketcode } from '../../model/ticker';
 
-const useWebsocket = () => {
+const useWebsocket = ()  => {
 	const [coins, setCoins] = useState<Coins>({});
 	const [marketCodes, setMarketCodes] = useState<Marketcode[]>([]);
 
