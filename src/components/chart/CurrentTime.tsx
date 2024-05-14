@@ -10,5 +10,6 @@ export default function CurrentTime() {
 
 		return () => clearInterval(intervalId);
 	}, []);
-	return <h1>{ctime}</h1>;
+
+	return <h1 className="px-3 text-gray-600">{ctime}</h1>;
 }
