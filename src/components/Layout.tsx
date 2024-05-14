@@ -55,12 +55,12 @@ const Layout = () => {
 	if (!coins) return;
 
 	return (
-		<div className="w-full p-[40px] bg-gray-100 h-full min-h-screen">
-			<InfoBox currentCoin={currentCoin} marketCodes={marketCodes} />
-			<ChartContainer currentCoin={currentCoin} coinCode={coinCode} />
-			<CoinList coins={coins} marketCodes={marketCodes} />
-			{/* <InfoBox currentCoin={coins[coinCode || 'KRW-BTC']} marketCodes={marketCodes} /> */}
-			{/* <ChartContainer /> */}
+		<div className="w-full p-[40px] bg-gray-100 h-full min-h-screen flex justify-center">
+			<div className="w-[1000px]">
+				<InfoBox currentCoin={currentCoin} marketCodes={marketCodes} />
+				<ChartContainer currentCoin={currentCoin} coinCode={coinCode} />
+				<CoinList coins={coins} marketCodes={marketCodes} />
+			</div>
 		</div>
 	);
 };
