@@ -173,18 +173,17 @@ function CryptoChart({ coinCode, currentCoin, time }: Props) {
 	};
 
 	return (
-		<div className="w-[30vw]">
-			<TimeSelector />
+		<div className="w-full mb-2">
+			<section className="flex justify-between w-full px-2 py-4 my-2 bg-gray-200 ">
+				<TimeSelector />
+				<CurrentTime />
+			</section>
 			<div className="container relative">
 				<Chart width={width} height={height} ref={chartRef} onCrosshairMove={handleCrosshairMove}>
 					<TimeScale ref={timeScale} onVisibleLogicalRangeChange={handleVisibleLogicalRangeChange} timeVisible />
 					<CandlestickSeries ref={candleSeries} data={data} reactive={true} />
 					<div className="absolute z-10 top-2" ref={tooltipRef}></div>
 				</Chart>
-			</div>
-
-			<div>
-				<CurrentTime />
 			</div>
 		</div>
 	);
