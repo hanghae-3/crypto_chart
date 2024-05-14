@@ -10,9 +10,11 @@ export default function TimeSelector() {
 	};
 
 	return (
-		<section>
+		<div className="flex px-4 gap-x-4">
 			<button name="1Min" onClick={handleClick}>
-				<div className={`${time === '1Min' ? 'text-blue-400' : 'text-gray-400'}`}>1분</div>
+				<div className={`${time === '1Min' ? 'text-blue-400' : 'text-gray-400'} flex items-center justify-center`}>
+					1분
+				</div>
 			</button>
 			<button name="1Hour" onClick={handleClick}>
 				<div className={`${time === '1Hour' ? 'text-blue-400' : 'text-gray-400'}`}>1시간</div>
@@ -20,6 +22,6 @@ export default function TimeSelector() {
 			<button name="1Day" onClick={handleClick}>
 				<div className={`${time === '1Day' ? 'text-blue-400' : 'text-gray-400'}`}>1일</div>
 			</button>
-		</section>
+		</div>
 	);
 }
