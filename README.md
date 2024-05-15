@@ -2,15 +2,6 @@
 
 - [Crypto-Chart](https://crypto-currency-charts.netlify.app/)
 
-# Table Of Contents(TOC)
-
-- [ProjectName](#Project)
-- [TeamIntrtroduction](#TeamIntrtroduction)
-- [HowToWork](#HowToWork)
-- [ProjectSettings](#ProjectSettings)
-- [Usage](#Usage)
-- [ReferenceDocument](#Reference-Document)
-
 # Project
 
 ## Name
@@ -27,6 +18,8 @@ Crypto-Chart는 실시간 암호화폐 정보를 사용자에게 제공하는 �
 - **사용자 친화적 인터페이스**: 직관적인 UI를 통해 모든 연령대의 사용자가 쉽게 정보를 조회하고 이해할 수 있습니다.
 
 ### 스크린샷
+
+<img width="991" alt="스크린샷 2024-05-15 오전 11 44 11" src="https://github.com/hanghae-3/crypto_chart/assets/61236589/e6aacf6f-08d3-4c4c-9660-0ec424b7fe06">
 
 ## Project Skill
 
