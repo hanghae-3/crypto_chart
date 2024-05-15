@@ -15,7 +15,7 @@
 
 ## Name
 
-Crypto-Chart
+**Crypto-Chart**
 
 # Project Description
 
@@ -31,22 +31,22 @@ Crypto-Chart는 실시간 암호화폐 정보를 사용자에게 제공하는 �
 ## Project Skill
 
 <div>
+<h3>Language</h3>
 <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
 <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white">
-<br/>
+<h3>UI Library</h3>
 <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black">
 <br/>
+<h3>State Management</h3>
 <img src="https://img.shields.io/badge/-React%20Query-FF4154?style=for-the-badge&logo=react%20query&logoColor=white">
 <img src="https://img.shields.io/badge/zustand-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB">
-<br/>
+<h3>CSS Library</h3>
 <img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white">
-<br />
+<h3>Collaboration Tool</h3>
 <img src="https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white">
-
 <img src="https://img.shields.io/badge/jira-%230A0FFF.svg?style=for-the-badge&logo=jira&logoColor=white">
 <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
-<img src="https://img.shields.io/badge/tailwind-181717?style=for-the-badge&logo=tailwindcss&logoColor=blue">
 
 # How To Work
 
@@ -65,11 +65,22 @@ Crypto-Chart는 실시간 암호화폐 정보를 사용자에게 제공하는 �
 
 - **싱글턴 패턴 적용**: 암호화폐 정보의 상태 관리를 위해 싱글턴 패턴을 적용하였습니다. 이 패턴은 애플리케이션 내에서 일관된 상태를 유지하며 데이터 접근을 통제하므로, 데이터 일관성과 성능 향상에 기여합니다.
 
-## 팀원 2
+## 이종민
+
+### 실시간 차트 렌더링 구현
+
+- 틱 시간 - 1분 / 1시간 / 1일 선택 기능
+- 좌/우 스와이프를 통해 데이터를 계속 가져오는 기능
+- 현재 시간의 데이터가 계속 반영이 되도록 웹 소켓의 데이터를 활용하여 연동
+
+### 현재 시각 보여주는 시계 기능 구현
+
+- 현재 시간이 몇 시인지 보여주는 기능
 
 # Project Settings
 
-1. 프로젝트 세팅 작성
+1. **Project Folder Structure**
+2. **How To Start**
 
 ## Project Folder Structure
 
@@ -119,6 +130,8 @@ Crypto-Chart는 실시간 암호화폐 정보를 사용자에게 제공하는 �
  ┣ 📜utils.ts
  ┗ 📜vite-env.d.ts
 ```
+
+## How To Start
 
 1. git clone
 
