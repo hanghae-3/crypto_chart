@@ -15,6 +15,7 @@
 
 ## Name
 
+
 **Crypto-Chart**
 
 # Project Description
@@ -48,6 +49,7 @@ Crypto-Chart는 실시간 암호화폐 정보를 사용자에게 제공하는 �
 <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
 
+
 # How To Work
 
 ## 강수영
@@ -76,6 +78,7 @@ Crypto-Chart는 실시간 암호화폐 정보를 사용자에게 제공하는 �
 ### 현재 시각 보여주는 시계 기능 구현
 
 - 현재 시간이 몇 시인지 보여주는 기능
+
 
 # Project Settings
 
@@ -136,7 +139,7 @@ Crypto-Chart는 실시간 암호화폐 정보를 사용자에게 제공하는 �
 1. git clone
 
 ```js
-  git clone https://github.com/hanghae-3/crypto_chart.git
+git clone https://github.com/hanghae-3/crypto_chart.git
 ```
 
 2. crypto_chart 폴더를 인터프린터나 컴파일러로 열기
@@ -150,7 +153,6 @@ npm install
 
 ```
 npm run dev
-
 ```
 
 # Reference Document
