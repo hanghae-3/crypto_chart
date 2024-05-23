@@ -1,6 +1,22 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 function App() {
+	useEffect(() => {
+		fetch('/api/time', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		}).then((res) => {
+			if (res.ok) {
+				console.log(res.url);
+			}
+		});
+
+		console.log(1);
+	}, []);
+
 	return (
 		<div className="flex items-center justify-center w-full min-h-screen">
 			<button className="relative cursor-pointer opacity-90 hover:opacity-100 transition-opacity p-[2px] bg-black rounded-[16px] bg-gradient-to-t from-[#8122b0] to-[#dc98fd] active:scale-95">
